@@ -1,19 +1,17 @@
-# CS310_Project
+# Application Name: 
 
-# Application Name:
+**Group member's name and ID**
 
-# Group member's name and ID:
+**Main Purpose:**
 
-# Main Purpose: 
+**Target Audience:**
 
-# Target Audience: 
+**Key Features:**
 
-# Key Features: 
+**Platform:**
 
-# Platform: 
+**Data Storage:**
 
-# Data Storage: 
+**Unique Selling Point:**
 
-# Unique Selling Point: 
-
-# Challenges: 
+**Challenges:**
