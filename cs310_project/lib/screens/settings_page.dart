@@ -1,46 +1,111 @@
 import 'package:flutter/material.dart';
+import '../utils/app_styles.dart';
 
-class SettingsPage extends StatefulWidget {
+class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
-
-  @override
-  State<SettingsPage> createState() => _SettingsPageState();
-}
-
-class _SettingsPageState extends State<SettingsPage> {
-  final TextEditingController _newNameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
-  
-  @override
-  void dispose() {
-    _newNameController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
+        backgroundColor: AppStyles.primaryColor,
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(AppStyles.defaultPadding),
         children: [
-          _buildNameChangeSection(),
-          const SizedBox(height: 24),
-          _buildPasswordChangeSection(),
-          const SizedBox(height: 24),
-          _buildSignOutButton(),
-          const SizedBox(height: 16),
-          Center(
-            child: Text(
-              'Version 1.0.0',
+          _buildSection(
+            title: 'Account',
+            children: [
+              _buildSettingTile(
+                icon: Icons.person_outline,
+                title: 'Profile',
+                onTap: () {
+                  // TODO: Navigate to profile page
+                },
+              ),
+              _buildSettingTile(
+                icon: Icons.notifications_outlined,
+                title: 'Notifications',
+                onTap: () {
+                  // TODO: Navigate to notifications settings
+                },
+              ),
+              _buildSettingTile(
+                icon: Icons.security_outlined,
+                title: 'Privacy',
+                onTap: () {
+                  // TODO: Navigate to privacy settings
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: AppStyles.defaultPadding),
+          _buildSection(
+            title: 'Preferences',
+            children: [
+              _buildSettingTile(
+                icon: Icons.dark_mode_outlined,
+                title: 'Dark Mode',
+                trailing: Switch(
+                  value: false, // TODO: Implement theme switching
+                  onChanged: (value) {
+                    // TODO: Toggle dark mode
+                  },
+                ),
+              ),
+              _buildSettingTile(
+                icon: Icons.language_outlined,
+                title: 'Language',
+                trailing: const Text('English'),
+                onTap: () {
+                  // TODO: Show language selection
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: AppStyles.defaultPadding),
+          _buildSection(
+            title: 'Support',
+            children: [
+              _buildSettingTile(
+                icon: Icons.help_outline,
+                title: 'Help & Support',
+                onTap: () {
+                  // TODO: Show help center
+                },
+              ),
+              _buildSettingTile(
+                icon: Icons.feedback_outlined,
+                title: 'Send Feedback',
+                onTap: () {
+                  // TODO: Show feedback form
+                },
+              ),
+              _buildSettingTile(
+                icon: Icons.info_outline,
+                title: 'About',
+                onTap: () {
+                  // TODO: Show about page
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: AppStyles.defaultPadding * 2),
+          ElevatedButton(
+            onPressed: () {
+              // TODO: Implement logout
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+            ),
+            child: const Text(
+              'Logout',
               style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 12,
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
@@ -49,126 +114,46 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget _buildNameChangeSection() {
-    return Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Change Name',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+  Widget _buildSection({
+    required String title,
+    required List<Widget> children,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(
+            left: AppStyles.defaultPadding,
+            bottom: AppStyles.defaultPadding / 2,
+          ),
+          child: Text(
+            title,
+            style: AppStyles.bodyStyle.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[600],
             ),
-            const SizedBox(height: 16),
-            const Text(
-              'Current Name: John Doe',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _newNameController,
-              decoration: const InputDecoration(
-                labelText: 'New Name',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Update name functionality
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Name updated successfully')),
-                  );
-                },
-                child: const Text('Submit'),
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
+        Card(
+          child: Column(
+            children: children,
+          ),
+        ),
+      ],
     );
   }
 
-  Widget _buildPasswordChangeSection() {
-    return Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Change Password',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'New Password',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _confirmPasswordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Confirm New Password',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Change password functionality
-                  if (_passwordController.text == _confirmPasswordController.text) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Password updated successfully')),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Passwords do not match')),
-                    );
-                  }
-                },
-                child: const Text('Update Password'),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSignOutButton() {
-    return ElevatedButton(
-      onPressed: () {
-        // Sign out functionality
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          '/',
-          (route) => false,
-        );
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.red.shade100,
-        foregroundColor: Colors.red.shade900,
-        padding: const EdgeInsets.symmetric(vertical: 12),
-      ),
-      child: const Text('Sign Out'),
+  Widget _buildSettingTile({
+    required IconData icon,
+    required String title,
+    Widget? trailing,
+    VoidCallback? onTap,
+  }) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      trailing: trailing,
+      onTap: onTap,
     );
   }
 } 
