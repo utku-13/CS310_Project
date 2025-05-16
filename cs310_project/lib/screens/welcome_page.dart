@@ -74,7 +74,7 @@ class WelcomePage extends StatelessWidget {
               // Signup Button
               OutlinedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/signup');
+                  Navigator.pushNamed(context, '/register');
                 },
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: Colors.blue),

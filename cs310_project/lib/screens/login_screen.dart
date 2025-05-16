@@ -35,7 +35,10 @@ class _LoginScreenState extends State<LoginScreen> {
           _emailController.text.trim(),
           _passwordController.text.trim(),
         );
-        // Navigation will be handled by the auth state listener in main.dart
+        // Explicitly navigate to home screen after successful login
+        if (mounted) {
+          Navigator.pushReplacementNamed(context, '/home');
+        }
       } catch (e) {
         setState(() {
           _errorMessage = e.toString();
