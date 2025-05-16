@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
+import 'home_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -40,7 +41,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
           _passwordController.text.trim(),
           _nameController.text.trim(),
         );
-        // Navigation will be handled by the auth state listener in main.dart
+        
+        // Navigate to home screen and remove all previous routes
+        if (mounted) {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+            (Route<dynamic> route) => false,
+          );
+        }
       } catch (e) {
         setState(() {
           _errorMessage = e.toString();
