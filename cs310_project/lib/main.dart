@@ -12,8 +12,11 @@ import 'screens/chat_history_page.dart';
 import 'screens/book_therapy_page.dart';
 import 'screens/daily_tips_page.dart';
 import 'utils/app_styles.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
