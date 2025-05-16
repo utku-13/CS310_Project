@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'screens/welcome_page.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
@@ -19,6 +20,13 @@ import 'screens/reset_password_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  
+  try {
+    await dotenv.load(fileName: ".env");
+  } catch (e) {
+    print('Warning: .env file not found. Make sure to create it with your GEMINI_API_KEY');
+  }
+  
   runApp(const MyApp());
 }
 

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../utils/app_styles.dart';
+import '../services/gemini_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -12,28 +15,58 @@ class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
   final List<ChatMessage> _messages = [];
   final ScrollController _scrollController = ScrollController();
+  final GeminiService _geminiService = GeminiService();
+  bool _isLoading = false;
 
-  void _sendMessage() {
+  Future<void> _sendMessage() async {
     if (_messageController.text.trim().isEmpty) return;
+
+    final userMessage = _messageController.text;
+    _messageController.clear();
 
     setState(() {
       _messages.add(
         ChatMessage(
-          text: _messageController.text,
+          text: userMessage,
           isUser: true,
           timestamp: DateTime.now(),
         ),
       );
-      // Simulate AI response
-      _messages.add(
-        ChatMessage(
-          text: "I understand how you're feeling. Would you like to talk more about it?",
-          isUser: false,
-          timestamp: DateTime.now(),
-        ),
-      );
-      _messageController.clear();
+      _isLoading = true;
     });
+
+    try {
+      // Get response from Gemini
+      final response = await _geminiService.getResponse(userMessage);
+      
+      // Save chat to Firestore
+      await _saveChatToFirestore(userMessage, response);
+
+      setState(() {
+        _messages.add(
+          ChatMessage(
+            text: response,
+            isUser: false,
+            timestamp: DateTime.now(),
+          ),
+        );
+      });
+    } catch (e) {
+      setState(() {
+        _messages.add(
+          ChatMessage(
+            text: "Sorry, I'm having trouble connecting right now. Please try again later.",
+            isUser: false,
+            timestamp: DateTime.now(),
+          ),
+        );
+      });
+      print('Error getting Gemini response: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
 
     // Scroll to bottom
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -43,6 +76,22 @@ class _ChatPageState extends State<ChatPage> {
         curve: Curves.easeOut,
       );
     });
+  }
+
+  Future<void> _saveChatToFirestore(String userMessage, String aiResponse) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance.collection('chats').add({
+          'userId': user.uid,
+          'userMessage': userMessage,
+          'aiResponse': aiResponse,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+      }
+    } catch (e) {
+      print('Error saving chat to Firestore: $e');
+    }
   }
 
   @override
@@ -80,6 +129,11 @@ class _ChatPageState extends State<ChatPage> {
               },
             ),
           ),
+          if (_isLoading)
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: CircularProgressIndicator(),
+            ),
           Container(
             padding: const EdgeInsets.all(AppStyles.smallPadding),
             decoration: BoxDecoration(
@@ -112,6 +166,7 @@ class _ChatPageState extends State<ChatPage> {
                       ),
                     ),
                     onSubmitted: (_) => _sendMessage(),
+                    enabled: !_isLoading,
                   ),
                 ),
                 const SizedBox(width: AppStyles.smallPadding),
@@ -119,7 +174,7 @@ class _ChatPageState extends State<ChatPage> {
                   backgroundColor: AppStyles.primaryColor,
                   child: IconButton(
                     icon: const Icon(Icons.send, color: Colors.white),
-                    onPressed: _sendMessage,
+                    onPressed: _isLoading ? null : _sendMessage,
                   ),
                 ),
               ],
