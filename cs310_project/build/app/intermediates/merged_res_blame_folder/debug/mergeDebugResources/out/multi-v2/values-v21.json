@@ -4,7 +4,7 @@
             "outputFile": "com.example.cs310_project.app-mergeDebugResources-35:/values-v21/values-v21.xml",
             "map": [
                 {
-                    "source": "/Users/macbookpro/.gradle/caches/8.10.2/transforms/360bbbebe16f24e8a132b5fd759e28fe/transformed/jetified-credentials-play-services-auth-1.2.0-rc01/res/values-v21/values-v21.xml",
+                    "source": "/Users/utkuozer/.gradle/caches/8.10.2/transforms/360bbbebe16f24e8a132b5fd759e28fe/transformed/jetified-credentials-play-services-auth-1.2.0-rc01/res/values-v21/values-v21.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -23,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "/Users/macbookpro/.gradle/caches/8.10.2/transforms/731cd9948a7dde4822052c6be439a4c3/transformed/core-1.13.1/res/values-v21/values-v21.xml",
+                    "source": "/Users/utkuozer/.gradle/caches/8.10.2/transforms/731cd9948a7dde4822052c6be439a4c3/transformed/core-1.13.1/res/values-v21/values-v21.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,13",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4",

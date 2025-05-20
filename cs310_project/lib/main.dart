@@ -16,6 +16,8 @@ import 'utils/app_styles.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'screens/reset_password_screen.dart';
+import 'package:provider/provider.dart';
+import 'providers/favorites_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,36 +37,41 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'CS310 Project',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
-        textTheme: GoogleFonts.poppinsTextTheme(
-          Theme.of(context).textTheme,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => FavoritesProvider()),
+      ],
+      child: MaterialApp(
+        title: 'CS310 Project',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          useMaterial3: true,
+          textTheme: GoogleFonts.poppinsTextTheme(
+            Theme.of(context).textTheme,
+          ),
+          scaffoldBackgroundColor: AppStyles.backgroundColor,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: AppStyles.primaryColor,
+            primary: AppStyles.primaryColor,
+            secondary: AppStyles.secondaryColor,
+          ),
         ),
-        scaffoldBackgroundColor: AppStyles.backgroundColor,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppStyles.primaryColor,
-          primary: AppStyles.primaryColor,
-          secondary: AppStyles.secondaryColor,
-        ),
+        home: const AuthWrapper(),
+        routes: {
+          '/welcome': (context) => const WelcomePage(),
+          '/login': (context) => const LoginScreen(),
+          '/register': (context) => const RegisterScreen(),
+          '/home': (context) => const HomeScreen(),
+          '/tasks': (context) => const TasksPage(),
+          '/settings': (context) => const SettingsPage(),
+          '/chat': (context) => const ChatPage(),
+          '/chat-library': (context) => const ChatLibraryPage(),
+          '/chat-history': (context) => const ChatHistoryPage(),
+          '/book': (context) => const BookTherapyPage(),
+          '/recommendations': (context) => const DailyTipsPage(),
+          '/reset-password': (context) => const ResetPasswordScreen(),
+        },
       ),
-      home: const AuthWrapper(),
-      routes: {
-        '/welcome': (context) => const WelcomePage(),
-        '/login': (context) => const LoginScreen(),
-        '/register': (context) => const RegisterScreen(),
-        '/home': (context) => const HomeScreen(),
-        '/tasks': (context) => const TasksPage(),
-        '/settings': (context) => const SettingsPage(),
-        '/chat': (context) => const ChatPage(),
-        '/chat-library': (context) => const ChatLibraryPage(),
-        '/chat-history': (context) => const ChatHistoryPage(),
-        '/book': (context) => const BookTherapyPage(),
-        '/recommendations': (context) => const DailyTipsPage(),
-        '/reset-password': (context) => const ResetPasswordScreen(),
-      },
     );
   }
 }

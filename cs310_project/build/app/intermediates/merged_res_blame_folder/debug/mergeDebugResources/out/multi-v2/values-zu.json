@@ -4,24 +4,17 @@
             "outputFile": "com.example.cs310_project.app-mergeDebugResources-35:/values-zu/values-zu.xml",
             "map": [
                 {
-                    "source": "/Users/macbookpro/.gradle/caches/8.10.2/transforms/6b4ad05633c5cdef3985b68390805888/transformed/jetified-play-services-basement-18.5.0/res/values-zu/values.xml",
+                    "source": "/Users/utkuozer/.gradle/caches/8.10.2/transforms/9b89317ee4466243bfe6a1aa0d122ebf/transformed/jetified-credentials-1.2.0-rc01/res/values-zu/values-zu.xml",
                     "from": {
-                        "startLines": "4",
-                        "startColumns": "0",
-                        "startOffsets": "195",
-                        "endColumns": "127",
-                        "endOffsets": "322"
-                    },
-                    "to": {
-                        "startLines": "19",
-                        "startColumns": "4",
-                        "startOffsets": "2079",
-                        "endColumns": "131",
-                        "endOffsets": "2206"
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,169",
+                        "endColumns": "113,122",
+                        "endOffsets": "164,287"
                     }
                 },
                 {
-                    "source": "/Users/macbookpro/.gradle/caches/8.10.2/transforms/58b6365221025f98e9de9ae33cfaff9a/transformed/jetified-play-services-base-18.5.0/res/values-zu/values.xml",
+                    "source": "/Users/utkuozer/.gradle/caches/8.10.2/transforms/58b6365221025f98e9de9ae33cfaff9a/transformed/jetified-play-services-base-18.5.0/res/values-zu/values.xml",
                     "from": {
                         "startLines": "4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
                         "startColumns": "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
@@ -38,7 +31,7 @@
                     }
                 },
                 {
-                    "source": "/Users/macbookpro/.gradle/caches/8.10.2/transforms/731cd9948a7dde4822052c6be439a4c3/transformed/core-1.13.1/res/values-zu/values-zu.xml",
+                    "source": "/Users/utkuozer/.gradle/caches/8.10.2/transforms/731cd9948a7dde4822052c6be439a4c3/transformed/core-1.13.1/res/values-zu/values-zu.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -55,7 +48,24 @@
                     }
                 },
                 {
-                    "source": "/Users/macbookpro/.gradle/caches/8.10.2/transforms/2a809b7cc07c601b12f20f0dc2fa7255/transformed/browser-1.4.0/res/values-zu/values-zu.xml",
+                    "source": "/Users/utkuozer/.gradle/caches/8.10.2/transforms/6b4ad05633c5cdef3985b68390805888/transformed/jetified-play-services-basement-18.5.0/res/values-zu/values.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "0",
+                        "startOffsets": "195",
+                        "endColumns": "127",
+                        "endOffsets": "322"
+                    },
+                    "to": {
+                        "startLines": "19",
+                        "startColumns": "4",
+                        "startOffsets": "2079",
+                        "endColumns": "131",
+                        "endOffsets": "2206"
+                    }
+                },
+                {
+                    "source": "/Users/utkuozer/.gradle/caches/8.10.2/transforms/2a809b7cc07c601b12f20f0dc2fa7255/transformed/browser-1.4.0/res/values-zu/values-zu.xml",
                     "from": {
                         "startLines": "2,3,4,5",
                         "startColumns": "4,4,4,4",
@@ -69,16 +79,6 @@
                         "startOffsets": "3307,3419,3527,3639",
                         "endColumns": "111,107,111,111",
                         "endOffsets": "3414,3522,3634,3746"
-                    }
-                },
-                {
-                    "source": "/Users/macbookpro/.gradle/caches/8.10.2/transforms/9b89317ee4466243bfe6a1aa0d122ebf/transformed/jetified-credentials-1.2.0-rc01/res/values-zu/values-zu.xml",
-                    "from": {
-                        "startLines": "2,3",
-                        "startColumns": "4,4",
-                        "startOffsets": "55,169",
-                        "endColumns": "113,122",
-                        "endOffsets": "164,287"
                     }
                 }
             ]
