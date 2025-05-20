@@ -84,7 +84,8 @@ class FavoritesProvider extends ChangeNotifier {
     required String category, 
     required String preview, 
     required String userMessage, 
-    required String aiResponse
+    required String aiResponse,
+    String? chatId,
   }) async {
     final user = _auth.currentUser;
     if (user == null) return;
@@ -100,7 +101,12 @@ class FavoritesProvider extends ChangeNotifier {
         userId: user.uid,
       );
 
-      await _firestore.collection('favorites').add(newFavorite.toFirestore());
+      final Map<String, dynamic> data = newFavorite.toFirestore();
+      if (chatId != null) {
+        data['chatId'] = chatId;
+      }
+
+      await _firestore.collection('favorites').add(data);
       // No need to manually update _favorites as the listener will handle it
     } catch (e) {
       print('Favori eklerken hata: $e');

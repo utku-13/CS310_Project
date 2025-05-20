@@ -67,6 +67,50 @@ class AuthService {
       throw _handleAuthException(e);
     }
   }
+  
+  // Update user display name
+  Future<void> updateDisplayName(String newName) async {
+    try {
+      User? user = _auth.currentUser;
+      if (user != null) {
+        // Update in Firebase Auth
+        await user.updateDisplayName(newName);
+        
+        // Update in Firestore
+        await _firestore.collection('users').doc(user.uid).update({
+          'displayName': newName,
+        });
+      } else {
+        throw 'No authenticated user found';
+      }
+    } catch (e) {
+      throw _handleAuthException(e);
+    }
+  }
+  
+  // Change user password
+  Future<void> changePassword(String currentPassword, String newPassword) async {
+    try {
+      User? user = _auth.currentUser;
+      if (user != null && user.email != null) {
+        // Reauthenticate user
+        AuthCredential credential = EmailAuthProvider.credential(
+          email: user.email!,
+          password: currentPassword,
+        );
+        
+        // Verify old password by reauthenticating
+        await user.reauthenticateWithCredential(credential);
+        
+        // Change password
+        await user.updatePassword(newPassword);
+      } else {
+        throw 'No authenticated user found';
+      }
+    } catch (e) {
+      throw _handleAuthException(e);
+    }
+  }
 
   // Create user document in Firestore
   Future<void> _createUserDocument(User user, String displayName) async {
@@ -100,10 +144,12 @@ class AuthService {
           return 'Password is too weak.';
         case 'invalid-email':
           return 'Email address is invalid.';
+        case 'requires-recent-login':
+          return 'Please log in again before changing your password.';
         default:
-          return 'An error occurred. Please try again.';
+          return 'An error occurred. Please try again. (${e.code})';
       }
     }
-    return 'An unexpected error occurred.';
+    return 'An unexpected error occurred: $e';
   }
 } 

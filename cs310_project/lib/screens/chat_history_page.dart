@@ -228,6 +228,19 @@ class FavoriteChatCard extends StatelessWidget {
             onPressed: () => Navigator.pop(context),
             child: const Text('Kapat'),
           ),
+          if (favorite.chatId != null)
+            TextButton(
+              onPressed: () {
+                // Konuşmaya devam et
+                Navigator.pop(context);
+                Navigator.pushNamed(
+                  context, 
+                  '/chat',
+                  arguments: favorite.chatId
+                );
+              },
+              child: const Text('Devam Et'),
+            ),
           TextButton(
             onPressed: () {
               // Yeni bir sohbete başla

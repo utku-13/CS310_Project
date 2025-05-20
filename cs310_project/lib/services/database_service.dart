@@ -39,6 +39,20 @@ class DatabaseService {
     }
   }
 
+  // Get a chat by ID
+  Future<ChatModel?> getChatById(String chatId) async {
+    try {
+      DocumentSnapshot doc = await _firestore.collection('chats').doc(chatId).get();
+      if (doc.exists) {
+        return ChatModel.fromFirestore(doc);
+      }
+      return null;
+    } catch (e) {
+      print('Error getting chat by ID: $e');
+      return null;
+    }
+  }
+
   // Get user data
   Future<Map<String, dynamic>?> getUserData(String userId) async {
     try {

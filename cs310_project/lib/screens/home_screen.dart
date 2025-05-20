@@ -68,7 +68,7 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Welcome, ${user?.email?.split('@')[0] ?? 'User'}',
+                'Welcome, ${user?.displayName ?? user?.email?.split('@')[0] ?? 'User'}',
                 style: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,

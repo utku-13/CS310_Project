@@ -4,7 +4,7 @@
             "outputFile": "com.example.cs310_project.app-mergeDebugResources-35:/values-night-v8/values-night-v8.xml",
             "map": [
                 {
-                    "source": "/Users/macbookpro/Desktop/CS310_Project/cs310_project/android/app/src/main/res/values-night/styles.xml",
+                    "source": "/Users/utkuozer/Desktop/CS310_Project/cs310_project/android/app/src/main/res/values-night/styles.xml",
                     "from": {
                         "startLines": "3,14",
                         "startColumns": "4,4",

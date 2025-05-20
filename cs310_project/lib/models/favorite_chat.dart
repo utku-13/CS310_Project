@@ -9,6 +9,7 @@ class FavoriteChat {
   final DateTime createdAt;
   final String userId;
   final bool isDeleted;
+  final String? chatId;
 
   FavoriteChat({
     required this.id,
@@ -19,6 +20,7 @@ class FavoriteChat {
     required this.createdAt,
     required this.userId,
     this.isDeleted = false,
+    this.chatId,
   });
 
   // Firestore'dan veri oluşturma
@@ -35,6 +37,7 @@ class FavoriteChat {
           : DateTime.now(),
       userId: data['userId'] ?? '',
       isDeleted: data['isDeleted'] ?? false,
+      chatId: data['chatId'],
     );
   }
 
@@ -48,6 +51,7 @@ class FavoriteChat {
       'createdAt': FieldValue.serverTimestamp(),
       'userId': userId,
       'isDeleted': isDeleted,
+      if (chatId != null) 'chatId': chatId,
     };
   }
 } 

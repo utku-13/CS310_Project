@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import '../providers/favorites_provider.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+  const ChatPage({Key? key}) : super(key: key);
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -26,17 +26,44 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     super.initState();
-    _loadPreviousChats();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkForChatId();
+    });
   }
-
-  Future<void> _loadPreviousChats() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
-
-    _databaseService.getUserChats(user.uid).listen((chats) {
+  
+  void _checkForChatId() {
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args != null && args is String) {
+      _currentChatId = args;
+      _loadChatById(args);
+    } else {
       setState(() {
         _messages.clear();
-        for (var chat in chats) {
+        _currentChatId = null;
+      });
+      
+      if (_messages.isEmpty) {
+        setState(() {
+          _messages.add(
+            ChatMessage(
+              text: "Merhaba! Size nasıl yardımcı olabilirim?",
+              isUser: false,
+              timestamp: DateTime.now(),
+            ),
+          );
+        });
+      }
+    }
+  }
+  
+  Future<void> _loadChatById(String chatId) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    
+    try {
+      final chat = await _databaseService.getChatById(chatId);
+      if (chat != null) {
+        setState(() {
           _messages.add(
             ChatMessage(
               text: chat.userMessage,
@@ -51,9 +78,22 @@ class _ChatPageState extends State<ChatPage> {
               timestamp: chat.timestamp,
             ),
           );
-        }
-      });
-    });
+        });
+        
+        // Scroll to bottom
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (_scrollController.hasClients) {
+            _scrollController.animateTo(
+              _scrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+            );
+          }
+        });
+      }
+    } catch (e) {
+      print('Error loading chat by id: $e');
+    }
   }
 
   Future<void> _sendMessage() async {
@@ -73,10 +113,18 @@ class _ChatPageState extends State<ChatPage> {
       _isLoading = true;
     });
 
+    String aiResponse = "Üzgünüm, şu anda bağlantı sorunu yaşıyorum. Lütfen daha sonra tekrar deneyin.";
+    
     try {
       // Get response from Gemini
-      final response = await _geminiService.getResponse(userMessage);
-      
+      aiResponse = await _geminiService.getResponse(userMessage);
+    } catch (e) {
+      print('Error getting Gemini response: $e');
+      // Gemini API hatası durumunda varsayılan yanıt kullanılacak
+    }
+    
+    // Gemini başarısız olsa bile Firestore'a kaydet
+    try {
       // Save chat to Firestore
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
@@ -84,45 +132,35 @@ class _ChatPageState extends State<ChatPage> {
           id: '',
           userId: user.uid,
           userMessage: userMessage,
-          aiResponse: response,
+          aiResponse: aiResponse,
           timestamp: DateTime.now(),
         );
         _currentChatId = await _databaseService.saveChat(chat);
       }
-
-      setState(() {
-        _messages.add(
-          ChatMessage(
-            text: response,
-            isUser: false,
-            timestamp: DateTime.now(),
-          ),
-        );
-      });
     } catch (e) {
-      setState(() {
-        _messages.add(
-          ChatMessage(
-            text: "Sorry, I'm having trouble connecting right now. Please try again later.",
-            isUser: false,
-            timestamp: DateTime.now(),
-          ),
-        );
-      });
-      print('Error getting Gemini response: $e');
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      print('Error saving chat to Firestore: $e');
     }
+
+    setState(() {
+      _messages.add(
+        ChatMessage(
+          text: aiResponse,
+          isUser: false,
+          timestamp: DateTime.now(),
+        ),
+      );
+      _isLoading = false;
+    });
 
     // Scroll to bottom
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
     });
   }
 
@@ -185,6 +223,21 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
+  void _startNewChat() {
+    setState(() {
+      _messages.clear();
+      _currentChatId = null;
+      
+      _messages.add(
+        ChatMessage(
+          text: "Merhaba! Yeni bir sohbet başlattınız. Size nasıl yardımcı olabilirim?",
+          isUser: false,
+          timestamp: DateTime.now(),
+        ),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -192,22 +245,42 @@ class _ChatPageState extends State<ChatPage> {
         title: const Text('Chat'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.chat_bubble_outline),
+            tooltip: 'Yeni Sohbet',
+            onPressed: _startNewChat,
+          ),
+          IconButton(
             icon: const Icon(Icons.favorite_border),
             onPressed: () async {
-              if (_currentChatId != null) {
+              if (_messages.length >= 2) {
                 final category = await _showCategorySelectionDialog();
                 if (category != null) {
                   final favoritesProvider = Provider.of<FavoritesProvider>(context, listen: false);
-                  await favoritesProvider.addFavorite(
-                    category: category,
-                    preview: _messages.last.text,
-                    userMessage: _messages[_messages.length - 2].text,
-                    aiResponse: _messages.last.text,
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Added to favorites')),
-                  );
+                  try {
+                    final int lastIndex = _messages.length - 1;
+                    final String aiMessage = _messages[lastIndex].text;
+                    final String userMessage = _messages[lastIndex - 1].text;
+                    
+                    await favoritesProvider.addFavorite(
+                      category: category,
+                      preview: aiMessage,
+                      userMessage: userMessage,
+                      aiResponse: aiMessage,
+                      chatId: _currentChatId,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Favorilere eklendi')),
+                    );
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Hata: $e')),
+                    );
+                  }
                 }
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Önce mesaj göndermelisiniz')),
+                );
               }
             },
           ),

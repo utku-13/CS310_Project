@@ -89,7 +89,7 @@ class MyApp extends StatelessWidget {
           '/home': (context) => const HomeScreen(),
           '/tasks': (context) => const TasksPage(),
           '/settings': (context) => const SettingsPage(),
-          '/chat': (context) => const ChatPage(),
+          '/chat': (context) => ChatPage(key: UniqueKey()),
           '/chat-library': (context) => const ChatLibraryPage(),
           '/chat-history': (context) => const ChatHistoryPage(),
           '/book': (context) => const BookTherapyPage(),
