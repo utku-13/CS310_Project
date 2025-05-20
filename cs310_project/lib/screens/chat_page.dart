@@ -141,7 +141,6 @@ class _ChatPageState extends State<ChatPage> {
     final favoritesProvider = Provider.of<FavoritesProvider>(context, listen: false);
     final categories = favoritesProvider.categories;
     String? selectedCategory;
-    final TextEditingController customCategoryController = TextEditingController();
 
     return showDialog<String?>(
       context: context,
@@ -170,14 +169,6 @@ class _ChatPageState extends State<ChatPage> {
                       });
                     },
                   ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: customCategoryController,
-                    decoration: const InputDecoration(
-                      labelText: 'Veya yeni kategori ekleyin',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -188,11 +179,7 @@ class _ChatPageState extends State<ChatPage> {
               ),
               TextButton(
                 onPressed: () {
-                  if (customCategoryController.text.isNotEmpty) {
-                    final newCategory = customCategoryController.text.trim();
-                    favoritesProvider.addCategory(newCategory);
-                    Navigator.pop(context, newCategory);
-                  } else if (selectedCategory != null) {
+                  if (selectedCategory != null) {
                     Navigator.pop(context, selectedCategory);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(

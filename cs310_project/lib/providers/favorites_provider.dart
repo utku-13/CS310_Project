@@ -69,7 +69,14 @@ class FavoritesProvider extends ChangeNotifier {
 
   // Belirli bir kategorideki favorileri getir
   List<FavoriteChat> getFavoritesByCategory(String category) {
-    return _favorites.where((fav) => fav.category == category).toList();
+    final user = _auth.currentUser;
+    if (user == null) return [];
+    
+    return _favorites.where((fav) => 
+      fav.category == category && 
+      fav.userId == user.uid && 
+      fav.isDeleted == false
+    ).toList();
   }
 
   // Favori ekle
@@ -111,14 +118,6 @@ class FavoritesProvider extends ChangeNotifier {
     } catch (e) {
       print('Favori silerken hata: $e');
       throw e;
-    }
-  }
-
-  // Yeni kategori ekle
-  void addCategory(String newCategory) {
-    if (!_categories.contains(newCategory)) {
-      _categories.add(newCategory);
-      notifyListeners();
     }
   }
 } 
