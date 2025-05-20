@@ -1,15 +1,50 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/user_model.dart';
+import '../models/chat_model.dart';
 
 class DatabaseService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Get user data
-  Future<UserModel?> getUserData(String uid) async {
+  // Get user's chats
+  Stream<List<ChatModel>> getUserChats(String userId) {
+    return _firestore
+        .collection('chats')
+        .where('userId', isEqualTo: userId)
+        .where('isDeleted', isEqualTo: false)
+        .orderBy('timestamp', descending: true)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => ChatModel.fromFirestore(doc)).toList());
+  }
+
+  // Save a new chat
+  Future<String> saveChat(ChatModel chat) async {
     try {
-      DocumentSnapshot doc = await _firestore.collection('users').doc(uid).get();
+      DocumentReference docRef = await _firestore.collection('chats').add(chat.toFirestore());
+      return docRef.id;
+    } catch (e) {
+      print('Error saving chat: $e');
+      throw e;
+    }
+  }
+
+  // Delete a chat (soft delete)
+  Future<void> deleteChat(String chatId) async {
+    try {
+      await _firestore.collection('chats').doc(chatId).update({
+        'isDeleted': true,
+      });
+    } catch (e) {
+      print('Error deleting chat: $e');
+      throw e;
+    }
+  }
+
+  // Get user data
+  Future<Map<String, dynamic>?> getUserData(String userId) async {
+    try {
+      DocumentSnapshot doc = await _firestore.collection('users').doc(userId).get();
       if (doc.exists) {
-        return UserModel.fromFirestore(doc);
+        return doc.data() as Map<String, dynamic>;
       }
       return null;
     } catch (e) {
@@ -19,9 +54,9 @@ class DatabaseService {
   }
 
   // Update user data
-  Future<void> updateUserData(String uid, Map<String, dynamic> data) async {
+  Future<void> updateUserData(String userId, Map<String, dynamic> data) async {
     try {
-      await _firestore.collection('users').doc(uid).update(data);
+      await _firestore.collection('users').doc(userId).update(data);
     } catch (e) {
       print('Error updating user data: $e');
       throw e;

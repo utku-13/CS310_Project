@@ -18,10 +18,35 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'screens/reset_password_screen.dart';
 import 'package:provider/provider.dart';
 import 'providers/favorites_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  
+  // Test Firestore connectivity
+  try {
+    final firestore = FirebaseFirestore.instance;
+    final user = FirebaseAuth.instance.currentUser;
+    
+    if (user != null) {
+      // Test write to chats collection
+      final docRef = await firestore.collection('chats').add({
+        'userId': user.uid,
+        'userMessage': 'Test message',
+        'aiResponse': 'Test response',
+        'timestamp': FieldValue.serverTimestamp(),
+        'isDeleted': false,
+      });
+      print('Firestore connection successful');
+      // Clean up test document
+      await docRef.delete();
+    } else {
+      print('Firestore test skipped: No authenticated user');
+    }
+  } catch (e) {
+    print('Firestore connection error: $e');
+  }
   
   try {
     await dotenv.load(fileName: ".env");
