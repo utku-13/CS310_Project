@@ -19,34 +19,15 @@ import 'screens/reset_password_screen.dart';
 import 'package:provider/provider.dart';
 import 'providers/favorites_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
   
-  // Test Firestore connectivity
-  try {
-    final firestore = FirebaseFirestore.instance;
-    final user = FirebaseAuth.instance.currentUser;
-    
-    if (user != null) {
-      // Test write to chats collection
-      final docRef = await firestore.collection('chats').add({
-        'userId': user.uid,
-        'userMessage': 'Test message',
-        'aiResponse': 'Test response',
-        'timestamp': FieldValue.serverTimestamp(),
-        'isDeleted': false,
-      });
-      print('Firestore connection successful');
-      // Clean up test document
-      await docRef.delete();
-    } else {
-      print('Firestore test skipped: No authenticated user');
-    }
-  } catch (e) {
-    print('Firestore connection error: $e');
-  }
+  // Firebase initialization
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   
   try {
     await dotenv.load(fileName: ".env");
@@ -106,19 +87,38 @@ class AuthWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        
-        if (snapshot.hasData) {
-          return const HomeScreen();
-        }
-        
-        return const WelcomePage();
-      },
-    );
+    try {
+      return StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          print('AuthWrapper - ConnectionState: ${snapshot.connectionState}');
+          print('AuthWrapper - HasData: ${snapshot.hasData}');
+          print('AuthWrapper - HasError: ${snapshot.hasError}');
+          if (snapshot.hasError) {
+            print('AuthWrapper - Error: ${snapshot.error}');
+          }
+          if (snapshot.hasData) {
+            print('AuthWrapper - User: ${snapshot.data?.email}');
+          }
+          
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            print('AuthWrapper - Showing loading indicator');
+            return const Center(child: CircularProgressIndicator());
+          }
+          
+          if (snapshot.hasData) {
+            print('AuthWrapper - Navigating to HomeScreen');
+            return const HomeScreen();
+          }
+          
+          print('AuthWrapper - Navigating to WelcomePage');
+          return const WelcomePage();
+        },
+      );
+    } catch (e) {
+      // Fallback to WelcomePage if Firebase is not properly configured
+      print('Firebase auth error: $e');
+      return const WelcomePage();
+    }
   }
 }

@@ -42,13 +42,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
           _nameController.text.trim(),
         );
         
-        // Navigate to home screen and remove all previous routes
-        if (mounted) {
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
-            (Route<dynamic> route) => false,
-          );
-        }
+        // AuthWrapper will automatically handle navigation
+        // No need to manually navigate
       } catch (e) {
         setState(() {
           _errorMessage = e.toString();

@@ -7,126 +7,49 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('HomeScreen - Building widget');
     final user = FirebaseAuth.instance.currentUser;
-    final authService = AuthService();
+    print('HomeScreen - Current user: ${user?.email}');
+    
+    // Simple test to see if UI renders
+    print('HomeScreen - About to return simple Scaffold');
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AIWell'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              Navigator.pushNamed(context, '/settings');
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              // Logout dialog
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('Logout'),
-                  content: const Text('Are you sure you want to logout?'),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context); // Close dialog
-                      },
-                      child: const Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        try {
-                          await authService.signOut();
-                          if (context.mounted) {
-                            Navigator.pop(context); // Close dialog
-                            Navigator.pushReplacementNamed(context, '/'); // Return to Welcome page
-                          }
-                        } catch (e) {
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(e.toString())),
-                            );
-                          }
-                        }
-                      },
-                      child: const Text('Logout'),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
+        title: const Text('AIWell - Test'),
+        backgroundColor: Colors.blue,
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Welcome, ${user?.displayName ?? user?.email?.split('@')[0] ?? 'User'}',
-                style: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              '🎉 SUCCESS! 🎉',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: Colors.green,
               ),
-              const SizedBox(height: 16),
-              const Text(
-                'What would you like to do with your personal AI mental health assistant?',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-              const SizedBox(height: 32),
-              Expanded(
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  children: [
-                    _buildFeatureCard(
-                      context,
-                      'Chat',
-                      Icons.chat_bubble_outline,
-                      Colors.blue.shade100,
-                      () {
-                        Navigator.pushNamed(context, '/chat');
-                      },
-                    ),
-                    _buildFeatureCard(
-                      context,
-                      'Chat Library',
-                      Icons.library_books_outlined,
-                      Colors.green.shade100,
-                      () {
-                        Navigator.pushNamed(context, '/chat-library');
-                      },
-                    ),
-                    _buildFeatureCard(
-                      context,
-                      'Book Therapy',
-                      Icons.calendar_today,
-                      Colors.orange.shade100,
-                      () {
-                        Navigator.pushNamed(context, '/book');
-                      },
-                    ),
-                    _buildFeatureCard(
-                      context,
-                      'Daily Tips',
-                      Icons.tips_and_updates_outlined,
-                      Colors.purple.shade100,
-                      () {
-                        Navigator.pushNamed(context, '/recommendations');
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Welcome, ${user?.email ?? 'User'}!',
+              style: const TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 40),
+            const Text(
+              'Login successful! HomeScreen is working!',
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 40),
+            ElevatedButton(
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
+              },
+              child: const Text('Logout'),
+            ),
+          ],
         ),
       ),
     );

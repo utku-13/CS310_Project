@@ -31,14 +31,14 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
       try {
+        print('LoginScreen - Starting login process');
         await _authService.signInWithEmailAndPassword(
           _emailController.text.trim(),
           _passwordController.text.trim(),
         );
-        // Explicitly navigate to home screen after successful login
-        if (mounted) {
-          Navigator.pushReplacementNamed(context, '/home');
-        }
+        print('LoginScreen - Login successful, waiting for AuthWrapper');
+        // AuthWrapper will automatically handle navigation
+        // No need to manually navigate
       } catch (e) {
         setState(() {
           _errorMessage = e.toString();
