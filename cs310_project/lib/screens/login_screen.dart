@@ -32,21 +32,35 @@ class _LoginScreenState extends State<LoginScreen> {
 
       try {
         print('LoginScreen - Starting login process');
+        
+        // Perform login
         await _authService.signInWithEmailAndPassword(
           _emailController.text.trim(),
           _passwordController.text.trim(),
         );
-        print('LoginScreen - Login successful, waiting for AuthWrapper');
-        // AuthWrapper will automatically handle navigation
-        // No need to manually navigate
+        
+        print('LoginScreen - Login successful, navigating to home');
+        
+        // Clear form
+        _emailController.clear();
+        _passwordController.clear();
+        
+        // Navigate to home page
+        if (mounted) {
+          Navigator.of(context).pushReplacementNamed('/home');
+        }
+        
       } catch (e) {
+        print('LoginScreen - Login error: $e');
         setState(() {
           _errorMessage = e.toString();
         });
       } finally {
-        setState(() {
-          _isLoading = false;
-        });
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
       }
     }
   }

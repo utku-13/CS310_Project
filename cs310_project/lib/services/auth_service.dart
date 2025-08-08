@@ -23,8 +23,10 @@ class AuthService {
       // Update user profile
       await result.user?.updateDisplayName(displayName);
 
-      // Create user document in Firestore
-      await _createUserDocument(result.user!, displayName);
+      // Create user document in Firestore (non-blocking)
+      _createUserDocument(result.user!, displayName).catchError((e) {
+        print('Warning: Could not create user document: $e');
+      });
 
       return result;
     } catch (e) {
@@ -36,16 +38,21 @@ class AuthService {
   Future<UserCredential> signInWithEmailAndPassword(
       String email, String password) async {
     try {
+      print('AuthService - Starting sign in process');
       UserCredential result = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+      print('AuthService - Sign in successful');
 
-      // Update last login timestamp
-      await _updateLastLogin(result.user!);
+      // Update last login timestamp (non-blocking)
+      _updateLastLogin(result.user!).catchError((e) {
+        print('Warning: Could not update last login timestamp: $e');
+      });
 
       return result;
     } catch (e) {
+      print('AuthService - Sign in error: $e');
       throw _handleAuthException(e);
     }
   }
@@ -76,9 +83,11 @@ class AuthService {
         // Update in Firebase Auth
         await user.updateDisplayName(newName);
         
-        // Update in Firestore
-        await _firestore.collection('users').doc(user.uid).update({
+        // Update in Firestore (non-blocking)
+        _firestore.collection('users').doc(user.uid).update({
           'displayName': newName,
+        }).catchError((e) {
+          print('Warning: Could not update display name in Firestore: $e');
         });
       } else {
         throw 'No authenticated user found';
@@ -114,20 +123,48 @@ class AuthService {
 
   // Create user document in Firestore
   Future<void> _createUserDocument(User user, String displayName) async {
-    await _firestore.collection('users').doc(user.uid).set({
-      'uid': user.uid,
-      'email': user.email,
-      'displayName': displayName,
-      'createdAt': FieldValue.serverTimestamp(),
-      'lastLoginAt': FieldValue.serverTimestamp(),
-    });
+    try {
+      await _firestore.collection('users').doc(user.uid).set({
+        'uid': user.uid,
+        'email': user.email,
+        'displayName': displayName,
+        'createdAt': FieldValue.serverTimestamp(),
+        'lastLoginAt': FieldValue.serverTimestamp(),
+      });
+      print('AuthService - User document created successfully');
+    } catch (e) {
+      print('AuthService - Error creating user document: $e');
+      rethrow;
+    }
   }
 
   // Update last login timestamp
   Future<void> _updateLastLogin(User user) async {
-    await _firestore.collection('users').doc(user.uid).update({
-      'lastLoginAt': FieldValue.serverTimestamp(),
-    });
+    try {
+      // Check if user document exists
+      final userDoc = await _firestore.collection('users').doc(user.uid).get();
+      
+      if (userDoc.exists) {
+        // Update existing document
+        await _firestore.collection('users').doc(user.uid).update({
+          'lastLoginAt': FieldValue.serverTimestamp(),
+        });
+        print('AuthService - Last login timestamp updated');
+      } else {
+        // Create new user document if it doesn't exist
+        await _firestore.collection('users').doc(user.uid).set({
+          'uid': user.uid,
+          'email': user.email,
+          'displayName': user.displayName ?? user.email?.split('@')[0] ?? 'User',
+          'createdAt': FieldValue.serverTimestamp(),
+          'lastLoginAt': FieldValue.serverTimestamp(),
+        });
+        print('AuthService - New user document created');
+      }
+    } catch (e) {
+      print('AuthService - Error updating last login: $e');
+      rethrow;
+    }
   }
 
   // Handle Firebase Auth exceptions
