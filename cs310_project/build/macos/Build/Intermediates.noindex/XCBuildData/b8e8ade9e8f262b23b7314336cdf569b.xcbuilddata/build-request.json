@@ -1,0 +1,65 @@
+{
+  "buildCommand" : {
+    "command" : "build",
+    "skipDependencies" : false,
+    "style" : "buildOnly"
+  },
+  "configuredTargets" : [
+    {
+      "guid" : "18c1723432283e0cc55f10a6dcfd9e02a26d6e580d3222b86d62fb80ec380c14"
+    }
+  ],
+  "containerPath" : "/Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Runner.xcworkspace",
+  "continueBuildingAfterErrors" : false,
+  "dependencyScope" : "workspace",
+  "enableIndexBuildArena" : false,
+  "hideShellScriptEnvironment" : false,
+  "parameters" : {
+    "action" : "build",
+    "activeArchitecture" : "arm64",
+    "activeRunDestination" : {
+      "disableOnlyActiveArch" : false,
+      "platform" : "macosx",
+      "sdk" : "macosx15.2",
+      "sdkVariant" : "macos",
+      "supportedArchitectures" : [
+        "arm64e",
+        "arm64",
+        "x86_64"
+      ],
+      "targetArchitecture" : "arm64"
+    },
+    "arenaInfo" : {
+      "buildIntermediatesPath" : "/Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/build/macos/Build/Intermediates.noindex",
+      "buildProductsPath" : "/Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/build/macos/Build/Products",
+      "derivedDataPath" : "/Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/build/macos",
+      "indexDataStoreFolderPath" : "/Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/build/macos/Index.noindex/DataStore",
+      "indexEnableDataStore" : true,
+      "indexPCHPath" : "/Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/build/macos/Index.noindex/PrecompiledHeaders",
+      "pchPath" : "/Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/build/macos/Build/Intermediates.noindex/PrecompiledHeaders"
+    },
+    "configurationName" : "Debug",
+    "overrides" : {
+      "commandLine" : {
+        "table" : {
+          "COMPILER_INDEX_STORE_ENABLE" : "NO",
+          "OBJROOT" : "/Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/build/macos/Build/Intermediates.noindex",
+          "SYMROOT" : "/Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/build/macos/Build/Products"
+        }
+      },
+      "synthesized" : {
+        "table" : {
+          "ACTION" : "build",
+          "ENABLE_PREVIEWS" : "NO",
+          "ENABLE_XOJIT_PREVIEWS" : "YES"
+        }
+      }
+    }
+  },
+  "schemeCommand" : "launch",
+  "showNonLoggedProgress" : true,
+  "useDryRun" : false,
+  "useImplicitDependencies" : true,
+  "useLegacyBuildLocations" : false,
+  "useParallelTargets" : true
+}

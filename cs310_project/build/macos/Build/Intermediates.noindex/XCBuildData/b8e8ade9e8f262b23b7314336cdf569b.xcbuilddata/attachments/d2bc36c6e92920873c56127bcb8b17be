@@ -1,0 +1,23 @@
+{
+  'version': 0,
+  'use-external-names': 'false',
+  'case-sensitive': 'false',
+  'roots': [{
+    'type': 'directory',
+    'name': "/Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/build/macos/Build/Products/Debug/FirebaseStorage/FirebaseStorage.framework/Modules"
+    'contents': [{
+      'type': 'file',
+      'name': "module.modulemap",
+      'external-contents': "/Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/build/macos/Build/Intermediates.noindex/Pods.build/Debug/FirebaseStorage.build/unextended-module.modulemap",
+    }]
+    },
+    {
+    'type': 'directory',
+    'name': "/Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/build/macos/Build/Products/Debug/FirebaseStorage/FirebaseStorage.framework/Headers"
+    'contents': [{
+      'type': 'file',
+      'name': "FirebaseStorage-Swift.h",
+      'external-contents': "/Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/build/macos/Build/Intermediates.noindex/Pods.build/Debug/FirebaseStorage.build/unextended-interface-header.h",
+    }]
+    }]
+}

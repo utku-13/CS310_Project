@@ -1,0 +1,37 @@
+dependencies: \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/strings/internal/cord_rep_btree_reader.cc \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/Target\ Support\ Files/abseil/abseil-prefix.pch \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/strings/internal/cord_rep_btree_reader.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/base/config.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/base/options.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/base/policy_checks.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/strings/internal/cord_data_edge.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/strings/internal/cord_internal.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/base/attributes.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/base/internal/endian.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/base/casts.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/base/internal/identity.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/base/macros.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/base/optimization.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/base/port.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/meta/type_traits.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/base/internal/unaligned_access.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/base/nullability.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/base/internal/nullability_impl.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/base/internal/invoke.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/container/internal/compressed_tuple.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/utility/utility.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/base/internal/inline_variable.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/container/internal/container_memory.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/memory/memory.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/strings/string_view.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/base/internal/throw_delegate.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/strings/internal/cord_rep_flat.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/strings/internal/cord_rep_btree.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/base/internal/raw_logging.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/base/internal/atomic_hook.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/base/log_severity.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/types/span.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/types/internal/span.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/algorithm/algorithm.h \
+  /Users/mustafabozyel/Github-Desktop/CS310_Project/cs310_project/macos/Pods/abseil/absl/strings/internal/cord_rep_btree_navigator.h

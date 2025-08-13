@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'screens/welcome_page.dart';
 import 'screens/login_screen.dart';
@@ -33,17 +32,11 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   
-  // Configure Firestore for offline support
+  // Configure Firestore for better error handling
   FirebaseFirestore.instance.settings = const Settings(
-    persistenceEnabled: true,
+    persistenceEnabled: false, // Offline modu kapat
     cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
   );
-  
-  try {
-    await dotenv.load(fileName: ".env");
-  } catch (e) {
-    print('Warning: .env file not found. Make sure to create it with your GEMINI_API_KEY');
-  }
   
   runApp(const MyApp());
 }
@@ -58,10 +51,11 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => FavoritesProvider()),
       ],
       child: MaterialApp(
-        title: 'CS310 Project',
+        title: 'AIWell - Ruh Sağlığı Asistanı',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.blue,
           useMaterial3: true,
+          fontFamily: 'Poppins',
           textTheme: GoogleFonts.poppinsTextTheme(
             Theme.of(context).textTheme,
           ),
@@ -70,12 +64,102 @@ class MyApp extends StatelessWidget {
             seedColor: AppStyles.primaryColor,
             primary: AppStyles.primaryColor,
             secondary: AppStyles.secondaryColor,
+            surface: AppStyles.surfaceColor,
+            background: AppStyles.backgroundColor,
+            error: AppStyles.errorColor,
+            onPrimary: Colors.white,
+            onSecondary: Colors.white,
+            onSurface: AppStyles.textPrimaryColor,
+            onBackground: AppStyles.textPrimaryColor,
+            onError: Colors.white,
+          ),
+          appBarTheme: AppBarTheme(
+            backgroundColor: AppStyles.primaryColor,
+            foregroundColor: Colors.white,
+            elevation: 0,
+            centerTitle: false,
+            titleTextStyle: AppStyles.headingSmallStyle.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+            iconTheme: const IconThemeData(color: Colors.white),
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: AppStyles.primaryButtonStyle,
+          ),
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: AppStyles.outlineButtonStyle,
+          ),
+          inputDecorationTheme: InputDecorationTheme(
+            filled: true,
+            fillColor: AppStyles.surfaceColor,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppStyles.borderRadius),
+              borderSide: BorderSide(
+                color: AppStyles.textLightColor.withOpacity(0.3),
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppStyles.borderRadius),
+              borderSide: BorderSide(
+                color: AppStyles.textLightColor.withOpacity(0.3),
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppStyles.borderRadius),
+              borderSide: const BorderSide(
+                color: AppStyles.primaryColor,
+                width: 2,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppStyles.borderRadius),
+              borderSide: const BorderSide(color: AppStyles.errorColor),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: AppStyles.defaultPadding,
+              vertical: AppStyles.smallPadding,
+            ),
+            labelStyle: AppStyles.bodyMediumStyle.copyWith(
+              color: AppStyles.textSecondaryColor,
+            ),
+            hintStyle: AppStyles.bodyMediumStyle.copyWith(
+              color: AppStyles.textLightColor,
+            ),
+          ),
+          cardTheme: CardThemeData(
+            color: AppStyles.cardColor,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppStyles.borderRadius),
+            ),
+            shadowColor: AppStyles.cardShadow.first.color,
+          ),
+          dialogTheme: DialogThemeData(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppStyles.largeBorderRadius),
+            ),
+            backgroundColor: AppStyles.surfaceColor,
+          ),
+          snackBarTheme: SnackBarThemeData(
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppStyles.smallBorderRadius),
+            ),
+            backgroundColor: AppStyles.textPrimaryColor,
+            contentTextStyle: AppStyles.bodyStyle.copyWith(color: Colors.white),
+          ),
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+            backgroundColor: AppStyles.primaryColor,
+            foregroundColor: Colors.white,
+            elevation: 8,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppStyles.borderRadius),
+            ),
           ),
         ),
         home: const AuthWrapper(),
         onGenerateRoute: (settings) {
-          print('MyApp - Route requested: ${settings.name}');
-          
           // Check if user is authenticated
           final user = FirebaseAuth.instance.currentUser;
           
@@ -155,41 +239,73 @@ class AuthWrapper extends StatelessWidget {
       return StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          print('AuthWrapper - ConnectionState: ${snapshot.connectionState}');
-          print('AuthWrapper - HasData: ${snapshot.hasData}');
-          print('AuthWrapper - HasError: ${snapshot.hasError}');
-          if (snapshot.hasError) {
-            print('AuthWrapper - Error: ${snapshot.error}');
-          }
-          if (snapshot.hasData) {
-            print('AuthWrapper - User: ${snapshot.data?.email}');
-          }
-          
           if (snapshot.connectionState == ConnectionState.waiting) {
-            print('AuthWrapper - Showing loading indicator');
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
+            return Scaffold(
+              backgroundColor: AppStyles.backgroundColor,
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        gradient: AppStyles.primaryGradient,
+                        borderRadius: BorderRadius.circular(50),
+                        boxShadow: AppStyles.elevatedShadow,
+                      ),
+                      child: const Icon(
+                        Icons.psychology,
+                        size: 50,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    Text(
+                      'AIWell',
+                      style: AppStyles.headingStyle.copyWith(
+                        color: AppStyles.primaryColor,
+                        fontSize: 36,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Yapay Zeka Destekli Ruh Sağlığı Asistanı',
+                      style: AppStyles.bodyMediumStyle.copyWith(
+                        color: AppStyles.textSecondaryColor,
+                        fontSize: 16,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 32),
+                    const CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(AppStyles.primaryColor),
+                    ),
+                  ],
+                ),
+              ),
             );
           }
           
           if (snapshot.hasData) {
-            print('AuthWrapper - User authenticated, navigating to home');
             // Use Navigator to properly handle the route
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.of(context).pushReplacementNamed('/home');
             });
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
+            return Scaffold(
+              backgroundColor: AppStyles.backgroundColor,
+              body: const Center(child: CircularProgressIndicator()),
             );
           }
           
-          print('AuthWrapper - User not authenticated, navigating to welcome');
           // Use Navigator to properly handle the route
           WidgetsBinding.instance.addPostFrameCallback((_) {
             Navigator.of(context).pushReplacementNamed('/welcome');
           });
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+          return Scaffold(
+            backgroundColor: AppStyles.backgroundColor,
+            body: const Center(child: CircularProgressIndicator()),
           );
         },
       );

@@ -6,7 +6,6 @@ class ChatModel {
   final String userMessage;
   final String aiResponse;
   final DateTime timestamp;
-  final bool isDeleted;
 
   ChatModel({
     required this.id,
@@ -14,7 +13,6 @@ class ChatModel {
     required this.userMessage,
     required this.aiResponse,
     required this.timestamp,
-    this.isDeleted = false,
   });
 
   factory ChatModel.fromFirestore(DocumentSnapshot doc) {
@@ -24,8 +22,9 @@ class ChatModel {
       userId: data['userId'] ?? '',
       userMessage: data['userMessage'] ?? '',
       aiResponse: data['aiResponse'] ?? '',
-      timestamp: (data['timestamp'] as Timestamp).toDate(),
-      isDeleted: data['isDeleted'] ?? false,
+      timestamp: data['timestamp'] != null 
+        ? (data['timestamp'] as Timestamp).toDate()
+        : DateTime.now(),
     );
   }
 
@@ -35,7 +34,6 @@ class ChatModel {
       'userMessage': userMessage,
       'aiResponse': aiResponse,
       'timestamp': FieldValue.serverTimestamp(),
-      'isDeleted': isDeleted,
     };
   }
 } 
